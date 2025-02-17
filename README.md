@@ -34,7 +34,7 @@ pip install -r requirements.txt
 ## Utilisation
 
 ```bash
-python WPInt.py [-h] [-d DOMAINS [DOMAINS ...]] [-f FILE] [-b] [-v] [-k API_KEY]
+python WPInt.py [-h] [-d DOMAINS] [-l FILE] [-e] [-b] [--verbose] [--api-key]
 ```
 
 ### Arguments
