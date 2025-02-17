@@ -1,3 +1,6 @@
+![Logo du projet](https://github.com/redsecurityfr/WPint/blob/main/WPINT.png)
+
+
 # WPInt - Analyseur WordPress
 
 WPInt est un outil d'analyse de sites WordPress qui permet d'extraire et d'analyser les informations des utilisateurs WordPress, notamment les hashes Gravatar associés aux comptes.
