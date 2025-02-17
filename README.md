@@ -40,11 +40,12 @@ python WPInt.py [-h] [-d DOMAINS [DOMAINS ...]] [-f FILE] [-b] [-v] [-k API_KEY]
 ### Arguments
 
 - `-h, --help` : Affiche l'aide
+- `-e`: Recherche EXIF sur le domaine
 - `-d DOMAINS [DOMAINS ...]` : Liste des domaines WordPress à analyser
-- `-f FILE` : Fichier contenant une liste de domaines (un par ligne)
+- `-l FILE` : Fichier contenant une liste de domaines (un par ligne)
 - `-b, --bypass` : Active le contournement des limitations de taux
 - `-v, --verbose` : Mode verbeux pour plus de détails
-- `-k API_KEY, --api-key API_KEY` : Clé API hashes.com pour le déchiffrement des hashes
+- `--api-key API_KEY` : Clé API hashes.com pour le déchiffrement des hashes
 
 ### Exemples
 
