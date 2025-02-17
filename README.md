@@ -51,7 +51,7 @@ python WPInt.py [-h] [-d DOMAINS] [-l FILE] [-e] [-b] [--verbose] [--api-key]
 
 Analyser un seul domaine :
 ```bash
-python WPInt.py -d example.wordpress.com
+python WPInt.py -d example.com
 ```
 
 
