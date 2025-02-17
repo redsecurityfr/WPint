@@ -54,14 +54,10 @@ Analyser un seul domaine :
 python WPInt.py -d example.wordpress.com
 ```
 
-Analyser plusieurs domaines :
-```bash
-python WPInt.py -d example1.com example2.com example3.com
-```
 
 Analyser une liste de domaines depuis un fichier :
 ```bash
-python WPInt.py -f domains.txt
+python WPInt.py -l domains.txt
 ```
 
 
