@@ -3,7 +3,7 @@
 
 # WPInt - Analyseur WordPress
 
-WPInt est un outil d'analyse de sites WordPress qui permet d'extraire et d'analyser les informations des utilisateurs WordPress, notamment les hashes Gravatar associés aux comptes.
+WPInt est un outil d'analyse OSINT de CMS WordPress qui permet d'extraire et d'analyser les informations des utilisateurs WordPress, notamment les hashes Gravatar associés aux comptes et la recherche d'image avec EXIF.
 
 ## Fonctionnalités
 
@@ -63,12 +63,5 @@ Analyser une liste de domaines depuis un fichier :
 python WPInt.py -f domains.txt
 ```
 
-## Sécurité
 
-- L'outil désactive par défaut les avertissements SSL pour la compatibilité
-- Les résultats de déchiffrement sont mis en cache pour optimiser les performances
-- Option de contournement des limitations de taux à utiliser avec précaution
 
-## Note
-
-Cet outil est destiné à des fins d'audit de sécurité légitimes. Assurez-vous d'avoir les autorisations nécessaires avant d'analyser un site WordPress.
