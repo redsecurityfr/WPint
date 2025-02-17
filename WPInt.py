@@ -405,7 +405,7 @@ def print_banner():
 """
     contact = """
 ╔══════════════════════════════════════════════════════════════╗
-║  @RedSecurityfr - red-security.fr - osint-opsec.fr             ║
+║  @RedSecurityfr - red-security.fr - osint-opsec.fr           ║
 ║                                                              ║
 ║  Rejoignez la communauté OSINT:                              ║
 ║  https://discord.com/invite/rPkY5jaTfF                       ║
