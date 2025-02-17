@@ -1,0 +1,4 @@
+requests>=2.31.0
+tqdm>=4.66.1
+termcolor>=2.4.0
+piexif>=1.1.3
