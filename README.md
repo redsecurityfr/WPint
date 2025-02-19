@@ -3,7 +3,7 @@
 
 # WPInt - OSINT WordPress
 
-WPInt est un outil d'analyse OSINT de CMS WordPress qui permet d'extraire et d'analyser les informations des utilisateurs WordPress, notamment les hashes Gravatar associés aux comptes et la recherche d'image avec EXIF.
+WPInt est un outil d'analyse OSINT de CMS WordPress qui permet d'extraire et d'analyser les informations des utilisateurs WordPress, notamment les hashes Gravatar associés aux comptes et la recherche des données EXIF dans les images.
 
 ## Fonctionnalités
 
