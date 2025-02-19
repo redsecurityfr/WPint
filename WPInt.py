@@ -163,15 +163,19 @@ class WordPressAnalyzer:
             print(f"Rôle: {user.get('roles', ['Inconnu'])[0] if user.get('roles') else 'Inconnu'}")
             
             if 'avatar_urls' in user:
+                # Utiliser un set pour stocker les hash uniques
+                unique_hashes = set()
                 for url in user['avatar_urls'].values():
                     parsed_url = urlparse(url)
                     if 'gravatar.com' in parsed_url.netloc and '/avatar/' in parsed_url.path:
                         hash_value = parsed_url.path.split('/avatar/')[-1].split('?')[0]
-                        print(f"Hash Gravatar: {hash_value}")
-                        if decrypt_hashes and self.api_key:
-                            result = self.decrypt_hash(hash_value)
-                            if result and result.plaintext:
-                                print(colored(f"Email déchiffré: {result.plaintext}", 'yellow'))
+                        if hash_value not in unique_hashes:
+                            unique_hashes.add(hash_value)
+                            print(f"Hash Gravatar: {hash_value}")
+                            if decrypt_hashes and self.api_key:
+                                result = self.decrypt_hash(hash_value)
+                                if result and result.plaintext:
+                                    print(colored(f"Email déchiffré: {result.plaintext}", 'yellow'))
             print("\n")
 
     def extract_relevant_exif(self, exif_data) -> Dict:
@@ -291,9 +295,13 @@ class WordPressAnalyzer:
                                     exif_dict = piexif.load(image_data)
                                     relevant_data = self.extract_relevant_exif(exif_dict)
                                     if relevant_data and not (len(relevant_data) == 1 and relevant_data.get('Date originale') == '0'):
-                                        print(colored(f"\nDonnées EXIF: {media_url}", "green"))
+                                        print(colored(f"\nDonnées EXIF: {media_url.split('[')[0]} {media_url.split('[')[1] if '[' in media_url else ''}", "green"))
                                         for key, value in relevant_data.items():
                                             print(f"{key}: {value}")
+                                            if key == "Localisation GPS":
+                                                lat, lon = map(float, value.split(", "))
+                                                google_maps_url = f"https://www.google.com/maps?q={lat},{lon}"
+                                                print(f"Google Maps: {google_maps_url}")
                                         results.append({"url": media_url, "exif": relevant_data})
                                 except:
                                     # Essayer d'extraire les métadonnées de l'image directement
@@ -312,7 +320,7 @@ class WordPressAnalyzer:
                                             if meta.get('title'):
                                                 relevant_data["Titre"] = meta['title']
                                             if relevant_data:
-                                                print(colored(f"\nDonnées EXIF: {media_url}", "green"))
+                                                print(colored(f"\nDonnées EXIF: {media_url.split('[')[0]} {media_url.split('[')[1] if '[' in media_url else ''}", "green"))
                                                 for key, value in relevant_data.items():
                                                     print(f"{key}: {value}")
                                                 results.append({"url": media_url, "exif": relevant_data})
@@ -415,45 +423,51 @@ def print_banner():
     print(colored(contact, 'yellow', attrs=['bold']))
 
 def main():
-    print_banner()
-    
-    parser = argparse.ArgumentParser(description='Analyseur de Sites WordPress')
-    parser.add_argument('-d', '--domain', help='Domaine unique à analyser')
-    parser.add_argument('-l', '--list', help='Fichier contenant une liste de domaines')
-    parser.add_argument('-e', '--exif', action='store_true', help='Activer l\'analyse EXIF')
-    parser.add_argument('-b', '--bypass', action='store_true', help='Activer le contournement de limite')
-    parser.add_argument('--json', help='Exporter les résultats en JSON')
-    parser.add_argument('--raw', action='store_true', help='Afficher uniquement les hashes, un par ligne')
-    parser.add_argument('--verbose', action='store_true', help='Afficher les messages d\'erreur et les détails')
-    parser.add_argument('--api-key', help='Clé API Hashes.com (optionnel)')
+    try:
+        print_banner()
+        parser = argparse.ArgumentParser(description='WPInt - Analyseur WordPress')
+        parser.add_argument('-d', '--domain', help='Domaine unique à analyser')
+        parser.add_argument('-l', '--list', help='Fichier contenant une liste de domaines')
+        parser.add_argument('-e', '--exif', action='store_true', help='Activer l\'analyse EXIF')
+        parser.add_argument('-b', '--bypass', action='store_true', help='Activer le contournement de limite')
+        parser.add_argument('--json', help='Exporter les résultats en JSON')
+        parser.add_argument('--raw', action='store_true', help='Afficher uniquement les hashes, un par ligne')
+        parser.add_argument('--verbose', action='store_true', help='Afficher les messages d\'erreur et les détails')
+        parser.add_argument('--api-key', help='Clé API Hashes.com (optionnel)')
 
-    args = parser.parse_args()
+        args = parser.parse_args()
 
-    if not args.domain and not args.list:
-        parser.error("L'option -d/--domain ou -l/--list doit être spécifiée")
+        if not args.domain and not args.list:
+            parser.error("L'option -d/--domain ou -l/--list doit être spécifiée")
 
-    domains = []
-    if args.domain:
-        domains.append(args.domain)
-    elif args.list:
-        with open(args.list) as f:
-            domains = [line.strip() for line in f if line.strip()]
+        domains = []
+        if args.domain:
+            domains.append(args.domain)
+        elif args.list:
+            with open(args.list) as f:
+                domains = [line.strip() for line in f if line.strip()]
 
-    all_hashes, users, exif_data = asyncio.run(process_domains(domains, args))
+        all_hashes, users, exif_data = asyncio.run(process_domains(domains, args))
 
-    if args.raw:
-        for hash_value in sorted(all_hashes):
-            print(hash_value)
+        if args.raw:
+            for hash_value in sorted(all_hashes):
+                print(hash_value)
 
-    if args.json:
-        with open(args.json, 'w') as f:
-            json.dump({
-                'hashes': list(all_hashes),
-                'users': users,
-                'exif_data': exif_data
-            }, f, indent=4)
-        if args.verbose or args.domain:
-            print(colored(f"\nRésultats exportés vers {args.json}", 'green'))
+        if args.json:
+            with open(args.json, 'w') as f:
+                json.dump({
+                    'hashes': list(all_hashes),
+                    'users': users,
+                    'exif_data': exif_data
+                }, f, indent=4)
+            if args.verbose or args.domain:
+                print(colored(f"\nRésultats exportés vers {args.json}", 'green'))
+    except KeyboardInterrupt:
+        print(colored("\n\nInterruption détectée. Arrêt du programme...", "yellow"))
+        sys.exit(0)
+    except Exception as e:
+        print(colored(f"\nErreur: {str(e)}", "red"))
+        sys.exit(1)
 
 if __name__ == '__main__':
     main()
